@@ -359,6 +359,18 @@
       //#define SPEK_BIND_POWER  5
       //#define SPEK_BIND_DATA   6
 
+    /**************************** DSM2-DSMX Bind Support added By Lance for AlienQuads AlienWii ****************************/
+      #define ONBOARD_BIND // Must be enabled to use AlienWii Onboard Bind Plug
+
+    // The following defines must match both your transmitter and receiver framerates or output will be all wonky!
+      #define SPEKTRUM 1024 // Only use with 22ms
+      //#define SPEKTRUM 2048   // Only use with 11ms
+
+      #define DSM2BIND_22 // DSM2 22ms 1024 Binding
+      //#define DSM2BIND_11 // DSM2 11ms 2048 Binding
+      //#define DSMXBIND_22 // DSMX 22ms 1024 Binding
+      //#define DSMXBIND_11 // DSMX 11ms 2048 Binding
+
     /*******************************    SBUS RECIVER    ************************************/
       /* The following line apply only for Futaba S-Bus Receiver on MEGA boards at RX1 only (Serial 1) or PROMICRO boards.
          You have to invert the S-Bus-Serial Signal e.g. with a Hex-Inverter like IC SN74 LS 04 */

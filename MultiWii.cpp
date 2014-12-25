@@ -554,6 +554,47 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
 }
 
 void setup() {
+// Start Bindcode added by Lance/AlienQuads
+// Delay pulse options for DSM2/DSMX derived from Einse's PocketQuad Bind Code http://www.rcgroups.com/forums/showpost.php?p=25063787&postcount=411
+
+#if defined(DSM2BIND_22)
+ #define BIND_PULSES 2 // 2 low pulses: DSM2 1024/22ms
+
+#elif defined(DSM2BIND_11)
+ #define BIND_PULSES 4 // 4 low pulses: DSM2 2048/11ms
+
+#elif defined(DSMXBIND_22)
+ #define BIND_PULSES 6 // 6 low pulses: DSMX 1024/22ms
+
+#elif defined(DSMXBIND_11)
+ #define BIND_PULSES 8 // 8 low pulses: DSMX 2048/11ms
+#endif
+
+#if defined(ONBOARD_BIND)
+int ispek = 0;
+
+pinMode(11, INPUT_PULLUP);
+int sensorVal = digitalRead(11);
+Serial.println(sensorVal);
+
+if (sensorVal == LOW)
+{
+pinMode(0, OUTPUT);
+digitalWrite(0, HIGH);
+delayMicroseconds(114);
+while(ispek < BIND_PULSES)
+{
+digitalWrite(0, LOW);
+delayMicroseconds(114);
+digitalWrite(0, HIGH);
+delayMicroseconds(114);
+ispek++;
+}
+pinMode(0, INPUT);
+}
+#endif
+// End Bindcode added by Lance/AlienQuads
+
   #if !defined(GPS_PROMINI)
     SerialOpen(0,SERIAL0_COM_SPEED);
     #if defined(PROMICRO)
@@ -571,6 +612,8 @@ void setup() {
   STABLEPIN_PINMODE;
   POWERPIN_OFF;
   initOutput();
+  // Add delay before startup calibration - Lance/AlienQuads
+  //delay(1000); // add a 1 seconds delay to startup
   readGlobalSet();
   #ifndef NO_FLASH_CHECK
     #if defined(MEGA)
