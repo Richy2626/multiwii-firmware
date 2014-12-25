@@ -925,6 +925,13 @@
   #undef INTERNAL_I2C_PULLUPS
 #endif
 
+#if defined BRUSHED_ALIENWII
+  #define HWPWM6
+  #define MPU6050
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -Y; imu.accADC[PITCH]  =  X; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = -X; imu.gyroADC[PITCH] = -Y; imu.gyroADC[YAW] = -Z;}
+#endif  
+
 #if defined(NANOWII)
   #define MPU6050
   #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -Y; imu.accADC[PITCH]  =  X; imu.accADC[YAW]  =  Z;}
