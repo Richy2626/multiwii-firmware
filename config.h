@@ -36,7 +36,7 @@
     //#define BI
     //#define TRI
     //#define QUADP
-    //#define QUADX
+    #define QUADX
     //#define Y4
     //#define Y6
     //#define HEX6
@@ -59,12 +59,12 @@
     //#define MINTHROTTLE 1300 // for Turnigy Plush ESCs 10A
     //#define MINTHROTTLE 1120 // for Super Simple ESCs 10A
     //#define MINTHROTTLE 1064 // special ESC (simonk)
-    //#define MINTHROTTLE 1050 // for brushed ESCs like ladybird
-    #define MINTHROTTLE 1150 // (*) (**)
+    #define MINTHROTTLE 1050 // 1050 for brushed ESCs like ladybird
+    //#define MINTHROTTLE 1150 // (*) (**)
 
   /****************************    Motor maxthrottle    *******************************/
     /* this is the maximum value for the ESCs at full power, this value can be increased up to 2000 */
-    #define MAXTHROTTLE 1850
+    #define MAXTHROTTLE 2000
 
   /****************************    Mincommand          *******************************/
     /* this is the value for the ESCs when they are not armed
@@ -90,6 +90,7 @@
       /* if you use a specific sensor board:
          please submit any correction to this list.
            Note from Alex: I only own some boards, for other boards, I'm not sure, the info was gathered via rc forums, be cautious */
+      #define BRUSHED_ALIENWII // AlienQuads Brushed AlienWii by Lance    
       //#define FFIMUv1         // first 9DOF+baro board from Jussi, with HMC5843                   <- confirmed by Alex
       //#define FFIMUv2         // second version of 9DOF+baro board from Jussi, with HMC5883       <- confirmed by Alex
       //#define FREEIMUv1       // v0.1 & v0.2 & v0.3 version of 9DOF board from Fabio
@@ -229,7 +230,7 @@
     #define YAW_DIRECTION 1
     //#define YAW_DIRECTION -1 // if you want to reverse the yaw correction direction
 
-    #define ONLYARMWHENFLAT //prevent the copter from arming when the copter is tilted
+    //#define ONLYARMWHENFLAT //prevent the copter from arming when the copter is tilted
 
    /********************************    ARM/DISARM    *********************************/
    /* optionally disable stick combinations to arm/disarm the motors.
@@ -375,7 +376,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
          For PROMINI, attach sat grey to RX0.  Attach sat black to ground. */
       //#define SPEKTRUM 1024
       //#define SPEKTRUM 2048
-      //#define RX_SERIAL_PORT 1    // Forced to 0 on Pro Mini and single serial boards; Set to your choice of 0, 1, or 2 on any Mega based board (defaults to 1 on Mega).
+      #define RX_SERIAL_PORT 1    // Forced to 0 on Pro Mini and single serial boards; Set to your choice of 0, 1, or 2 on any Mega based board (defaults to 1 on Mega).
       //**************************
       // Defines that allow a "Bind" of a Spektrum or Compatible Remote Receiver (aka Satellite) via Configuration GUI.
       //   Bind mode will be same as declared above, if your TX is capable.
@@ -383,7 +384,8 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
       //   By default, these are Ground=4, Power=5, Signal=6.  These pins are in a row on most MultiWii shield boards. Pins can be overriden below.  
       //   Normally use 3.3V regulator is needed on the power pin!!  If your satellite hangs during bind (blinks, but won't complete bind with a solid light), go direct 5V on all pins. 
       //**************************
-      //   For Pro Mini, the connector for the Satellite that resides on the FTDI can be unplugged and moved to these three adjacent pins. 
+      //   For Pro Mini, the connector for the Satellite that resides on the FTDI can be unplugged and moved to these three adjacent pins.
+
       //#define SPEK_BIND             //Un-Comment for Spektrum Satellie Bind Support.  Code is ~420 bytes smaller without it. 
       //#define SPEK_BIND_GROUND 4
       //#define SPEK_BIND_POWER  5
@@ -451,7 +453,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
 
     /*********************************    pin Layout     **********************************/
       /* activate this for a better pinlayout if all pins can be used => not possible on ProMicro */
-      //#define A32U4ALLPINS
+      #define A32U4ALLPINS
 
     /**********************************    PWM Setup     **********************************/
       /* activate all 6 hardware PWM outputs Motor 5 = D11 and 6 = D13. 
@@ -532,7 +534,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
       //#define GYRO_LPF_256HZ     // This is the default setting, no need to uncomment, just for reference
       //#define GYRO_LPF_188HZ
       //#define GYRO_LPF_98HZ
-      //#define GYRO_LPF_42HZ
+      #define GYRO_LPF_42HZ
       //#define GYRO_LPF_20HZ
       //#define GYRO_LPF_10HZ
       //#define GYRO_LPF_5HZ       // Use this only in extreme cases, rather change motors and/or props -- setting not available on ITG3200
@@ -587,7 +589,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
 
   /************************        continuous gyro calibration        ********************/
   /* Gyrocalibration will be repeated if copter is moving during calibration. */
-    //#define GYROCALIBRATIONFAILSAFE
+    #define GYROCALIBRATIONFAILSAFE
 
   /************************        AP FlightMode        **********************************/
   /*** FUNCTIONALITY TEMPORARY REMOVED ***/
@@ -607,11 +609,10 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
        PITCH, ROLL and YAW is centered and THROTTLE is set to FAILSAFE_THROTTLE value. You must set this value to descending about 1m/s or so
        for best results. This value is depended from your configuration, AUW and some other params.  Next, after FAILSAFE_OFF_DELAY the copter is disarmed, 
        and motors is stopped. If RC pulse coming back before reached FAILSAFE_OFF_DELAY time, after the small quard time the RC control is returned to normal. */
-    //#define FAILSAFE                                // uncomment  to activate the failsafe function
-    #define FAILSAFE_DELAY     10                     // Guard time for failsafe activation after signal lost. 1 step = 0.1sec - 1sec in example
-    #define FAILSAFE_OFF_DELAY 200                    // Time for Landing before motors stop in 0.1sec. 1 step = 0.1sec - 20sec in example
-    #define FAILSAFE_THROTTLE  (MINTHROTTLE + 200)    // (*) Throttle level used for landing - may be relative to MINTHROTTLE - as in this case
-    
+    #define FAILSAFE                              // uncomment  to activate the failsafe function
+    #define FAILSAFE_DELAY     2                 // Guard time for failsafe activation after signal lost. 1 step = 0.1sec - 1sec in example
+    #define FAILSAFE_OFF_DELAY 0                // Time for Landing before motors stop in 0.1sec. 1 step = 0.1sec - 20sec in example
+    #define FAILSAFE_THROTTLE  (1000)    // (*) Throttle level used for landing - may be relative to MINTHROTTLE - as in this case
     #define FAILSAFE_DETECT_TRESHOLD  985
 
 
@@ -661,7 +662,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
 
     /* introduce a deadband around the stick center
        Must be greater than zero, comment if you dont want a deadband on roll, pitch and yaw */
-    //#define DEADBAND 6
+    #define DEADBAND 2
 
   /**************************************************************************************/
   /***********************                  GPS                **************************/
@@ -1019,14 +1020,14 @@ Also note, that maqgnetic declination changes with time, so recheck your value e
     //#define EXT_MOTOR_64KHZ
     //#define EXT_MOTOR_32KHZ
     //#define EXT_MOTOR_16KHZ
-    //#define EXT_MOTOR_8KHZ
+    #define EXT_MOTOR_8KHZ
 
   /**************************************************************************************/
   /***********************     motor, servo and other presets     ***********************/
   /**************************************************************************************/
     /* motors will not spin when the throttle command is in low position
        this is an alternative method to stop immediately the motors */
-    //#define MOTOR_STOP
+    #define MOTOR_STOP
 
     /* some radios have not a neutral point centered on 1500. can be changed here */
     #define MIDRC 1500
