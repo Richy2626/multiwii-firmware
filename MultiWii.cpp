@@ -1432,8 +1432,8 @@ void loop () {
     PTerm = mul(rc,conf.pid[axis].P8)>>6;
     
     if (f.ANGLE_MODE || f.HORIZON_MODE) { // axis relying on ACC
-      // 50 degrees max inclination
-      errorAngle         = constrain(rc + GPS_angle[axis],-500,+500) - att.angle[axis] + conf.angleTrim[axis]; //16 bits is ok here
+      // MAXINC degrees max inclination
+      errorAngle         = constrain(rc + GPS_angle[axis],-MAXINC,+MAXINC) - att.angle[axis] + conf.angleTrim[axis]; //16 bits is ok here
       errorAngleI[axis]  = constrain(errorAngleI[axis]+errorAngle,-10000,+10000);                                                // WindUp     //16 bits is ok here
 
       PTermACC           = mul(errorAngle,conf.pid[PIDLEVEL].P8)>>7; // 32 bits is needed for calculation: errorAngle*P8 could exceed 32768   16 bits is ok for result
@@ -1490,8 +1490,8 @@ void loop () {
   for(axis=0;axis<3;axis++) {
     //-----Get the desired angle rate depending on flight mode
     if ((f.ANGLE_MODE || f.HORIZON_MODE) && axis<2 ) { // MODE relying on ACC
-      // calculate error and limit the angle to 50 degrees max inclination
-      errorAngle = constrain((rcCommand[axis]<<1) + GPS_angle[axis],-500,+500) - att.angle[axis] + conf.angleTrim[axis]; //16 bits is ok here
+      // calculate error and limit the angle to MAXINC degrees max inclination
+      errorAngle = constrain((rcCommand[axis]<<1) + GPS_angle[axis],-MAXINC,+MAXINC) - att.angle[axis] + conf.angleTrim[axis]; //16 bits is ok here
     }
     if (axis == 2) {//YAW is always gyro-controlled (MAG correction is applied to rcCommand)
       AngleRateTmp = (((int32_t) (conf.yawRate + 27) * rcCommand[2]) >> 5);
