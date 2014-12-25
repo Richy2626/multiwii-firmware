@@ -152,8 +152,8 @@ void LoadDefaults() {
     // do that at the last possible moment, so we can override virtually all defaults and constants
   #else
     #if PID_CONTROLLER == 1
-      conf.pid[ROLL].P8     = 33;  conf.pid[ROLL].I8    = 30; conf.pid[ROLL].D8     = 23;
-      conf.pid[PITCH].P8    = 33; conf.pid[PITCH].I8    = 30; conf.pid[PITCH].D8    = 23;
+      conf.pid[ROLL].P8     = 33;  conf.pid[ROLL].I8    = 30; conf.pid[ROLL].D8     = 33;
+      conf.pid[PITCH].P8    = 33; conf.pid[PITCH].I8    = 30; conf.pid[PITCH].D8    = 33;
       conf.pid[PIDLEVEL].P8 = 90; conf.pid[PIDLEVEL].I8 = 10; conf.pid[PIDLEVEL].D8 = 100;
     #elif PID_CONTROLLER == 2
       conf.pid[ROLL].P8     = 28;  conf.pid[ROLL].I8    = 10; conf.pid[ROLL].D8     = 7;
@@ -171,14 +171,18 @@ void LoadDefaults() {
 
     conf.pid[PIDVEL].P8 = 0;      conf.pid[PIDVEL].I8 = 0;    conf.pid[PIDVEL].D8 = 0;
 
-    conf.rcRate8 = 140; conf.rcExpo8 = 65;
-    conf.rollPitchRate = 30;
-    conf.yawRate = 35;
+    conf.rcRate8 = 100; conf.rcExpo8 = 0;
+    conf.rollPitchRate = 100;
+    conf.yawRate = 85;
     conf.dynThrPID = 0;
     conf.thrMid8 = 50; conf.thrExpo8 = 0;
+
     for(i=0;i<CHECKBOXITEMS;i++) {conf.activate[i] = 0;}
+    conf.activate[BOXANGLE] = 0b111; /* AUX1 high medium low all set for ANGLE by default*/
+
     conf.angleTrim[0] = 0; conf.angleTrim[1] = 0;
     conf.powerTrigger1 = 0;
+
   #endif // SUPPRESS_DEFAULTS_FROM_GUI
   #if defined(SERVO)
     static int8_t sr[8] = SERVO_RATES;
