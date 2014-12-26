@@ -36,6 +36,7 @@
     //#define BI
     //#define TRI
     //#define QUADP
+    //#define SENSORS_TILT_45DEG_LEFT         // rotate the FRONT 45 degres counterclockwise - nice hack to test QUADP without remounting FC    #define QUADX
     #define QUADX
     //#define Y4
     //#define Y6
@@ -379,7 +380,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
          For PROMINI, attach sat grey to RX0.  Attach sat black to ground. */
       //#define SPEKTRUM 1024
       //#define SPEKTRUM 2048
-      #define RX_SERIAL_PORT 1    // Forced to 0 on Pro Mini and single serial boards; Set to your choice of 0, 1, or 2 on any Mega based board (defaults to 1 on Mega).
+      //#define RX_SERIAL_PORT 1    // Forced to 0 on Pro Mini and single serial boards; Set to your choice of 0, 1, or 2 on any Mega based board (defaults to 1 on Mega).
       //**************************
       // Defines that allow a "Bind" of a Spektrum or Compatible Remote Receiver (aka Satellite) via Configuration GUI.
       //   Bind mode will be same as declared above, if your TX is capable.
@@ -395,7 +396,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
       //#define SPEK_BIND_DATA   6
 
     /**************************** DSM2-DSMX Bind Support added By Lance for AlienQuads AlienWii ****************************/
-      #define ONBOARD_BIND // Must be enabled to use AlienWii Onboard Bind Plug
+      //#define ONBOARD_BIND // Must be enabled to use AlienWii Onboard Bind Plug
 
     // The following defines must match both your transmitter and receiver framerates or output will be all wonky!
       #define SPEKTRUM 1024 // Only use with 22ms
@@ -456,7 +457,7 @@ At this moment you can use this function only with WinGUI 2.3 release. MultiWiiC
 
     /*********************************    pin Layout     **********************************/
       /* activate this for a better pinlayout if all pins can be used => not possible on ProMicro */
-      #define A32U4ALLPINS
+      //#define A32U4ALLPINS
 
     /**********************************    PWM Setup     **********************************/
       /* activate all 6 hardware PWM outputs Motor 5 = D11 and 6 = D13. 
