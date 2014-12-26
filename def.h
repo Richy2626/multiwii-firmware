@@ -943,10 +943,13 @@
 #endif
 
 #if defined BRUSHED_ALIENWII
+  #define A32U4ALLPINS
   #define HWPWM6
   #define MPU6050
   #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -Y; imu.accADC[PITCH]  =  X; imu.accADC[YAW]  =  Z;}
   #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = -X; imu.gyroADC[PITCH] = -Y; imu.gyroADC[YAW] = -Z;}
+  #define RX_SERIAL_PORT 1
+  #define ONBOARD_BIND
 #endif  
 
 #if defined(NANOWII)
