@@ -86,6 +86,12 @@
   /**********************************  Maximum inclination for angle and acro modes in tenths of a degree  ******************************/
     #define MAXINC 500  //500 = 50 degrees
 
+  /****************************    In-flight PID tuning    *******************************/
+    //#define INFLIGHT_PID_TUNE  // comment all or none for now, missing channels have no effect
+    //#define INFLIGHT_PID_TUNE_G_CHAN AUX2 // Gyro PIDs
+    //#define INFLIGHT_PID_TUNE_A_CHAN AUX3 // Acc PIDs
+    //#define INFLIGHT_PID_TUNE_SWITCH AUX4 // when channel high (>MAXCHECK) ranges of G and A pots doubled
+
   /**************************************************************************************/
   /*****************          boards and sensor definitions            ******************/
   /**************************************************************************************/
