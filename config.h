@@ -86,6 +86,11 @@
   /**********************************  Maximum inclination for angle and acro modes in tenths of a degree  ******************************/
     #define MAXINC 500  //500 = 50 degrees
 
+#define LED_WS2811
+#define LED_WS2811_PORT PORTB // Port of the pin the pixels are connected to
+#define LED_WS2811_DDR DDRB // Port of the pin the pixels are connected to
+#define LED_WS2811_PIN PORTB3 // Bit of the pin the pixels are connected to
+
   /**************************************************************************************/
   /*****************          boards and sensor definitions            ******************/
   /**************************************************************************************/

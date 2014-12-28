@@ -28,6 +28,11 @@ November  2013     V2.3
 
 #include <avr/pgmspace.h>
 
+#ifdef LED_WS2811
+#include "ws2811_o1.h"
+#endif
+
+
 /*********** RC alias *****************/
 
 const char pidnames[] PROGMEM =
@@ -367,6 +372,26 @@ uint8_t alarmArray[ALRM_FAC_SIZE];           // array
   int32_t baroPressureSum;
 #endif
 
+#if defined(LED_WS2811) && defined(BRUSHED_ALIENWII)
+void led_ws2811_update() {
+    static uint32_t lastupdate = currentTime; // currentTime is global
+    uint8_t r,g,b;
+
+	// only update LEDs once every 100000us / 10hz (10 times a second)
+	// just because, no need to screw up flight loop and update seems fast enough.
+    // worth additional experimentation
+	if ( (currentTime - lastupdate) < 100000)
+		return;
+	lastupdate = currentTime;
+
+	r = (constrain(rcData[THROTTLE],1000,2000) - 1000)>>2; //1000 - 2000 -> 0 - 250
+	g = (constrain(rcData[PITCH],1000,2000) - 1000)>>2;
+	b = (constrain(rcData[ROLL],1000,2000) - 1000)>>2;
+
+	ws2811_setled(r, g, b);
+}
+#endif
+
 void annexCode() { // this code is excetuted at each loop and won't interfere with control loop if it lasts less than 650 microseconds
   static uint32_t calibratedAccTime;
   uint16_t tmp,tmp2;
@@ -623,6 +648,9 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
       #endif
     #endif
   }
+#if defined(LED_WS2811) && defined(BRUSHED_ALIENWII)
+  led_ws2811_update();
+#endif
 }
 
 void setup() {
@@ -666,6 +694,23 @@ pinMode(0, INPUT);
 }
 #endif
 // End Bindcode added by Lance/AlienQuads
+
+// WS2811 based LED support ("neopixels" and friends)
+#if defined(LED_WS2811) && defined(BRUSHED_ALIENWII)
+   led_ws2811_init();
+   
+   ws2811_setled(255,0,0);
+   ws2811_setled(0,255,0);
+   ws2811_setled(0,0,255);
+   ws2811_setled(255,255,255);
+   delay(1000);
+   ws2811_setled(0,0,0);
+   ws2811_setled(0,0,0);
+   ws2811_setled(0,0,0);
+   ws2811_setled(0,0,0);
+   delay(1000);
+#endif
+
   SerialOpen(0,SERIAL0_COM_SPEED);
   #if defined(PROMICRO)
     SerialOpen(1,SERIAL1_COM_SPEED);
