@@ -88,9 +88,8 @@
 
   /****************************    In-flight PID tuning    *******************************/
     //#define INFLIGHT_PID_TUNE  // comment all or none for now, missing channels have no effect
-    //#define INFLIGHT_PID_TUNE_G_CHAN AUX2 // Gyro PIDs
-    //#define INFLIGHT_PID_TUNE_A_CHAN AUX3 // Acc PIDs
-    //#define INFLIGHT_PID_TUNE_SWITCH AUX4 // when channel high (>MAXCHECK) ranges of G and A pots doubled
+    //#define INFLIGHT_PID_TUNE_G AUX2 // Gyro PIDs
+    //#define INFLIGHT_PID_TUNE_A AUX3 // Acc PIDs
 
   /**************************************************************************************/
   /*****************          boards and sensor definitions            ******************/

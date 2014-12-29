@@ -624,51 +624,34 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
     #endif
   }
 
-#if defined(INFLIGHT_PID_TUNE)
+#ifdef INFLIGHT_PID_TUNE
   int16_t inflight_pid_input_g, inflight_pid_input_a; // g is gyro, a is acc
-  int8_t gy_offset, ac_offset; //-128 to 127
+  uint8_t gy_pid, ac_pid; // 0 - 255
 
-  // tuning applies offsets, cache starting values
-  static uint8_t pidroll_p = conf.pid[PIDROLL].P8;
-  static uint8_t pidroll_d = conf.pid[PIDROLL].D8;
-  static uint8_t pidpitch_p = conf.pid[PIDPITCH].P8;
-  static uint8_t pidpitch_d = conf.pid[PIDPITCH].D8;
-  static uint8_t pidlevel_p = conf.pid[PIDLEVEL].P8;
+  #ifdef INFLIGHT_PID_TUNE_G
+      // ranges are as described if tx endpoints are 1000 - 2000,
+      // if tx endpoint range is smaller, pid range will be smaller
+      inflight_pid_input_g = constrain(rcData[INFLIGHT_PID_TUNE_G],1000,2000) - 1000; // 0 - 1000
+      gy_pid = (inflight_pid_input_g >> 4) + 8;  // 0 - 62 + 8 makes 8 - 70, P of 0.8 - 7.0, D of 8.0 - 70.0
 
-  if (f.ARMED) {
-    inflight_pid_input_g = constrain(rcData[INFLIGHT_PID_TUNE_G_CHAN],1000,2000) - 1000; // 0 - 1000
-    inflight_pid_input_a = constrain(rcData[INFLIGHT_PID_TUNE_A_CHAN],1000,2000) - 1000; // 0 - 1000
+      // Gyro PIDs
+      // Benedikt's methodology.
+      // Do not change I.  D changes at 10 times the rate P.
+      // PITCH and ROLL use same PID values due to quad symmetry.
+      // in conf.pid, P is stored as P*10, D is stored as D, so no work needed to maintain ratio
+      conf.pid[PIDROLL].P8 = conf.pid[PIDPITCH].P8 = gy_pid;  //P8 is 33 when P is 3.3
+      conf.pid[PIDROLL].D8 = conf.pid[PIDPITCH].D8 = gy_pid;  //D8 is 33 when D is 33
+  #endif
 
-    // channel value 0-1000 is divided by 16 = 0-62, this is shifted to a range of +-31, which measures the pots deflection from 0 position (middle)
-    // when SWITCH is HIGH ranges double in size
-	if (rcData[INFLIGHT_PID_TUNE_SWITCH] > MAXCHECK) {
-        gy_offset = (inflight_pid_input_g >> 3) - 62;
-        ac_offset = (inflight_pid_input_a >> 3) - 62;
-	} else {
-        gy_offset = (inflight_pid_input_g >> 4) - 31;
-        ac_offset = (inflight_pid_input_a >> 4) - 31;
-    }
+  #ifdef INFLIGHT_PID_TUNE_A
+      inflight_pid_input_a = constrain(rcData[INFLIGHT_PID_TUNE_A],1000,2000) - 1000; // 0 - 1000
+      ac_pid = (inflight_pid_input_a >> 4) + 60;  // 0 - 62 + 60 makes 60 - 122, P of 6.0 - 12.2
 
-    // Gyro PIDs
-    // Benedikt's methodology.
-    // Do not change I.  D changes at 10 times the rate P.  PITCH and ROLL use same PID values due to quad symmetry
-    // gy value (-31 to 31) is directly added to P and D terms for PITCH and ROLL
-    // This has the effect of changing P by +/-.1 and D by +/-1 for each "click" of the pot,
-    // making for a range of about +- 3.1 for P and +- 31 for D over the range of the channel assuming you get 1000-2000 shown in the GUI.
-	// hopefully this range is enough, maybe not.
-    // all values clamped at 0 on the low end, otherwise unsigned values wrap (eek)
-    conf.pid[PIDROLL].P8 = max(pidroll_p + gy_offset, 10); //1.0 minimum for P
-    conf.pid[PIDROLL].D8 = max(pidroll_d + gy_offset, 0);
-    conf.pid[PIDPITCH].P8 = max(pidpitch_p + gy_offset, 10); //1.0 minimum for P
-    conf.pid[PIDPITCH].D8 = max(pidpitch_d + gy_offset, 0);
-
-    // Level PIDs
-    // Benedikt's methodology.
-    // Only change P.
-    // ac value (+-31) is added to starting value.
-    // Range of +- 3.1 for P
-    conf.pid[PIDLEVEL].P8 = max(pidlevel_p + ac_offset, 10); //1.0 minimum for P
-  }
+      // Level PIDs
+      // Benedikt's methodology.
+      // Only change P.
+      conf.pid[PIDLEVEL].P8 = ac_pid;
+  #endif
 #endif
 }
 
