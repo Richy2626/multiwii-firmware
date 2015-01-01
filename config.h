@@ -87,9 +87,10 @@
     #define MAXINC 500  //500 = 50 degrees
 
   /****************************    In-flight PID tuning    *******************************/
-    //#define INFLIGHT_PID_TUNE  // comment all or none for now, missing channels have no effect
-    //#define INFLIGHT_PID_TUNE_G AUX2 // Gyro PIDs
-    //#define INFLIGHT_PID_TUNE_A AUX3 // Acc PIDs
+    //#define INFLIGHT_TUNE
+    //#define INFLIGHT_TUNE_PID_G AUX2 // Gyro PIDs - if you leave this uncommented, set alternate pids in MultiWii.cpp
+    //#define INFLIGHT_TUNE_PID_A AUX3 // Acc PIDs - if you leave this uncommented, set alternate pids in MultiWii.cpp
+    //#define INFLIGHT_TUNE_SWITCH AUX1
 
   /**************************************************************************************/
   /*****************          boards and sensor definitions            ******************/

@@ -624,14 +624,38 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
     #endif
   }
 
-#ifdef INFLIGHT_PID_TUNE
+
+
+// not limited to pids, think big! today, gyro and acc pids, tomorrow, who knows ...
+#ifdef INFLIGHT_TUNE
+#define PIDCOPY(dst,src) dst.P8=src.P8; dst.I8=src.I8; dst.D8=src.D8;
+/*#define PIDSWAP(dst,src) do {uint8_t tmp_P8,tmp_I8,tmp3_D8; tmp_P8=dst.P8; tmp_I8=dst.I8; tmp_D8=dst.D8; dst.P8=src.P8; dst.I8=src.I8; dst.D8=src.D8; src.P8=tmp_P8; src.I8=tmp_I8; src.D8=tmp_D8;}*/
+
+  static uint8_t tune_switch = 0;
+  // initialize to eeprom pids
+  static pid_ pid_roll=conf.pid[ROLL], pid_pitch=conf.pid[PITCH], pid_level=conf.pid[PIDLEVEL];
+  uint8_t sw;
   int16_t inflight_pid_input_g, inflight_pid_input_a; // g is gyro, a is acc
   uint8_t gy_pid, ac_pid; // 0 - 255
 
-  #ifdef INFLIGHT_PID_TUNE_G
+  sw = (rcData[INFLIGHT_TUNE_SWITCH] > MAXCHECK) ? 1 : 0; // 1 when high, 0 when low
+  // switch changed
+  if (sw != tune_switch) {
+	  if (sw == 0) {
+		  // switch went low, restore eeprom PIDs
+		  PIDCOPY(conf.pid[ROLL], pid_roll);
+		  PIDCOPY(conf.pid[PITCH], pid_pitch);
+		  PIDCOPY(conf.pid[PIDLEVEL], pid_level);
+	  }
+      tune_switch = sw;
+  }
+
+  // we are tuning (switch is high, pots set value)
+  if (sw) {
+   #if defined(INFLIGHT_TUNE_PID_G)
       // ranges are as described if tx endpoints are 1000 - 2000,
       // if tx endpoint range is smaller, pid range will be smaller
-      inflight_pid_input_g = constrain(rcData[INFLIGHT_PID_TUNE_G],1000,2000) - 1000; // 0 - 1000
+      inflight_pid_input_g = constrain(rcData[INFLIGHT_TUNE_PID_G],1000,2000) - 1000; // 0 - 1000
       gy_pid = (inflight_pid_input_g >> 4) + 8;  // 0 - 62 + 8 makes 8 - 70, P of 0.8 - 7.0, D of 8.0 - 70.0
 
       // Gyro PIDs
@@ -639,19 +663,29 @@ void annexCode() { // this code is excetuted at each loop and won't interfere wi
       // Do not change I.  D changes at 10 times the rate P.
       // PITCH and ROLL use same PID values due to quad symmetry.
       // in conf.pid, P is stored as P*10, D is stored as D, so no work needed to maintain ratio
-      conf.pid[PIDROLL].P8 = conf.pid[PIDPITCH].P8 = gy_pid;  //P8 is 33 when P is 3.3
-      conf.pid[PIDROLL].D8 = conf.pid[PIDPITCH].D8 = gy_pid;  //D8 is 33 when D is 33
+      conf.pid[ROLL].P8 = conf.pid[PITCH].P8 = gy_pid;  //P8 is 33 when P is 3.3
+      conf.pid[ROLL].D8 = conf.pid[PITCH].D8 = gy_pid;  //D8 is 33 when D is 33
+  #else
+	  // if no pot defined, put your alternate gyro (roll/pitch) PIDs here
+      conf.pid[ROLL].P8 = conf.pid[PITCH].P8 = 25;  // roll/pitch P 2.5
+      conf.pid[ROLL].I8 = conf.pid[PITCH].I8 = 25; // roll/pitch I 0.025
+      conf.pid[ROLL].D8 = conf.pid[PITCH].D8 = 25; // roll/pitch D 25
   #endif
 
-  #ifdef INFLIGHT_PID_TUNE_A
-      inflight_pid_input_a = constrain(rcData[INFLIGHT_PID_TUNE_A],1000,2000) - 1000; // 0 - 1000
+  #if defined(INFLIGHT_TUNE_PID_A)
+      inflight_pid_input_a = constrain(rcData[INFLIGHT_TUNE_PID_A],1000,2000) - 1000; // 0 - 1000
       ac_pid = (inflight_pid_input_a >> 4) + 60;  // 0 - 62 + 60 makes 60 - 122, P of 6.0 - 12.2
 
       // Level PIDs
       // Benedikt's methodology.
       // Only change P.
-      conf.pid[PIDLEVEL].P8 = ac_pid;
+      conf.pid[PIDLEVEL].P8 = ac_pid; //P8 is 90 when P is 9.0
+  #else
+	  // if no pot defined, put your alternate Acc (level) PIDs here
+      conf.pid[PIDLEVEL].P8 = 150; //Level P is 15.0
   #endif
+
+  }
 #endif
 }
 
